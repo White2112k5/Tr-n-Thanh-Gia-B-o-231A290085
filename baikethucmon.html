@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BWhite — Cửa Hàng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@300;400&family=Be+Vietnam+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ===== DESIGN TOKENS ===== */
+  :root {
+    --ink:      #1a1410;
+    --paper:    #f5f0e8;
+    --cream:    #ede6d6;
+    --accent:   #c8471a;
+    --gold:     #b89a5a;
+    --muted:    #8a7e6e;
+    --border:   #d4c9b4;
+
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-mono:    'DM Mono', 'Courier New', monospace;
+    --font-body:    'Be Vietnam Pro', sans-serif;
+
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== NOISE TEXTURE OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    padding: 32px 48px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .logo span {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .tagline {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ===== HERO STRIP ===== */
+  .hero-strip {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 64px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: end;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    line-height: 1.1;
+    font-weight: 700;
+  }
+
+  .hero-title em {
+    color: var(--gold);
+    font-style: italic;
+    display: block;
+  }
+
+  .hero-desc {
+    font-size: 0.9rem;
+    color: #a09480;
+    line-height: 1.7;
+    max-width: 380px;
+    align-self: end;
+  }
+
+  .hero-desc strong {
+    color: var(--paper);
+    font-weight: 500;
+  }
+
+  /* ===== SEARCH SECTION ===== */
+  .search-section {
+    padding: 40px 48px 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 240px;
+    max-width: 520px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 1rem;
+    pointer-events: none;
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 14px 18px 14px 48px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  #searchInput::placeholder {
+    color: var(--muted);
+    opacity: 0.7;
+  }
+
+  #searchInput:focus {
+    border-color: var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  .clear-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
+  }
+
+  .clear-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .search-meta {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .search-meta strong {
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  /* ===== SORT BAR ===== */
+  .sort-bar {
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .sort-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 4px;
+  }
+
+  .sort-btn {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+    border-radius: 1px;
+  }
+
+  .sort-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .sort-btn.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .category-filter {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cat-btn {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    border-radius: 20px;
+    transition: all 0.15s;
+  }
+
+  .cat-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .cat-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+
+  /* ===== PRODUCT GRID ===== */
+  .grid-wrap {
+    padding: 40px 48px 80px;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 2px;
+  }
+
+  /* ===== PRODUCT CARD ===== */
+  .product-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+    animation: fadeSlideIn 0.5s var(--ease-out) both;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(26,20,16,0.12);
+    z-index: 2;
+  }
+
+  /* Staggered animation */
+  .product-card:nth-child(1) { animation-delay: 0.05s; }
+  .product-card:nth-child(2) { animation-delay: 0.10s; }
+  .product-card:nth-child(3) { animation-delay: 0.15s; }
+  .product-card:nth-child(4) { animation-delay: 0.20s; }
+  .product-card:nth-child(5) { animation-delay: 0.25s; }
+  .product-card:nth-child(6) { animation-delay: 0.30s; }
+  .product-card:nth-child(7) { animation-delay: 0.35s; }
+  .product-card:nth-child(8) { animation-delay: 0.40s; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-visual {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .product-card:hover .card-visual {
+    transform: scale(1.04);
+  }
+
+  /* Unique color per category */
+  .card-visual.tech    { background: linear-gradient(135deg, #1a2740 0%, #243352 100%); }
+  .card-visual.fashion { background: linear-gradient(135deg, #3d2216 0%, #5c3422 100%); }
+  .card-visual.beauty  { background: linear-gradient(135deg, #2a1f32 0%, #3d2a4a 100%); }
+  .card-visual.home    { background: linear-gradient(135deg, #1a2a20 0%, #233628 100%); }
+  .card-visual.food    { background: linear-gradient(135deg, #2d2010 0%, #3d2c16 100%); }
+
+  .card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 1px;
+  }
+
+  .badge-new     { background: var(--accent); color: white; }
+  .badge-sale    { background: var(--gold); color: var(--ink); }
+  .badge-hot     { background: #1a1410; color: var(--paper); }
+  .badge-limited { background: #4a3060; color: white; }
+
+  .card-body {
+    padding: 20px 20px 24px;
+  }
+
+  .card-category {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .card-name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+
+  /* Highlight matched text */
+  .card-name mark {
+    background: var(--gold);
+    color: var(--ink);
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  .card-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .price-block { display: flex; align-items: baseline; gap: 8px; }
+
+  .price-current {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .price-old {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  .add-to-cart {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: background 0.2s, transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .add-to-cart:hover {
+    background: var(--accent);
+    transform: scale(1.1);
+  }
+
+  .add-to-cart:active { transform: scale(0.95); }
+
+  /* Stars */
+  .card-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .stars { color: var(--gold); font-size: 0.75rem; letter-spacing: 1px; }
+  .rating-count {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    animation: fadeSlideIn 0.4s var(--ease-out);
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    display: block;
+    opacity: 0.4;
+    filter: grayscale(1);
+  }
+
+  .empty-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  .empty-msg {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .empty-query {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    border-radius: 2px;
+    background: rgba(200,71,26,0.05);
+  }
+
+  /* ===== CART TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 20px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    border-radius: 2px;
+    box-shadow: 4px 4px 0 var(--accent);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s var(--ease-out);
+    z-index: 500;
+    max-width: 280px;
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    header { padding: 20px 24px; }
+    .hero-strip { grid-template-columns: 1fr; padding: 40px 24px; }
+    .hero-desc { display: none; }
+    .search-section { padding: 28px 24px 0; }
+    .sort-bar { padding: 16px 24px; }
+    .grid-wrap { padding: 28px 24px 60px; }
+    .category-filter { margin-left: 0; width: 100%; }
+    footer { padding: 20px 24px; flex-direction: column; gap: 8px; }
+  }
+
+  @media (max-width: 560px) {
+    .product-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
+    .card-visual { height: 140px; font-size: 2.5rem; }
+    .card-body { padding: 14px; }
+    .hero-title { font-size: 2rem; }
+    header { flex-direction: column; align-items: flex-start; gap: 4px; }
+  }
+
+  @media (max-width: 380px) {
+    .product-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">BW<span>hite</span></div>
+  <div class="tagline">Cửa hàng trực tuyến · Việt Nam</div>
+</header>
+
+<!-- HERO -->
+<div class="hero-strip">
+  <div>
+    <div class="hero-title">
+      Sản phẩm<br>
+      <em>tinh chọn</em>
+    </div>
+  </div>
+  <p class="hero-desc">
+    <strong>Bộ sưu tập mùa này</strong> — từ công nghệ đến thời trang, 
+    mỹ phẩm và ẩm thực. Tìm kiếm theo tên để khám phá nhanh hơn.
+  </p>
+</div>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Tìm sản phẩm... (vd: tai nghe, son, cà phê)"
+      autocomplete="off"
+      spellcheck="false"
+    >
+    <button class="clear-btn" id="clearBtn" title="Xóa">×</button>
+  </div>
+  <div class="search-meta" id="searchMeta">
+    Hiển thị <strong id="countDisplay">8</strong> sản phẩm
+  </div>
+</div>
+
+<!-- SORT + FILTER -->
+<div class="sort-bar">
+  <span class="sort-label">Sắp xếp:</span>
+  <button class="sort-btn active" data-sort="default">Mặc định</button>
+  <button class="sort-btn" data-sort="price-asc">Giá ↑</button>
+  <button class="sort-btn" data-sort="price-desc">Giá ↓</button>
+  <button class="sort-btn" data-sort="rating">Đánh giá</button>
+
+  <div class="category-filter">
+    <button class="cat-btn active" data-cat="all">Tất cả</button>
+    <button class="cat-btn" data-cat="tech">Công nghệ</button>
+    <button class="cat-btn" data-cat="fashion">Thời trang</button>
+    <button class="cat-btn" data-cat="beauty">Làm đẹp</button>
+    <button class="cat-btn" data-cat="home">Gia dụng</button>
+    <button class="cat-btn" data-cat="food">Thực phẩm</button>
+  </div>
+</div>
+
+<!-- PRODUCT GRID -->
+<div class="grid-wrap">
+  <div class="product-grid" id="productGrid"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 BWhite Store</span>
+  <span>Tất cả giá đã bao gồm VAT</span>
+</footer>
+
+<script>
+/* ============================================================
+   DATA — Mảng sản phẩm
+   ============================================================ */
+const PRODUCTS = [
+  {
+    id: 1,
+    name: "Tai nghe Sony WH-1000XM5",
+    image: "https://images.unsplash.com/photo-1550009158-61dec72587bf?w=600&auto=format&fit=crop",
+    category: "tech",
+    emoji: "🎧",
+    desc: "Chống ồn chủ động, âm thanh Hi-Res, pin 30 giờ, kết nối đa điểm.",
+    price: 7990000,
+    oldPrice: 9500000,
+    rating: 4.9,
+    reviews: 2341,
+    badge: "hot",
+    badgeText: "HOT"
+  },
+  {
+    id: 2,
+    name: "Áo khoác Uniqlo Ultra Light Down",
+    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop",
+    category: "fashion",
+    emoji: "🧥",
+    desc: "Siêu nhẹ, gọn gàng, giữ ấm tốt. Có thể gấp vừa túi nhỏ.",
+    price: 1290000,
+    oldPrice: null,
+    rating: 4.7,
+    reviews: 891,
+    badge: "new",
+    badgeText: "MỚI"
+  },
+  {
+    id: 3,
+    name: "Son môi YSL Rouge Pur Couture",
+    image: "https://th.bing.com/th/id/OIP.TrAK71786hBmlZclhRFUWAHaHa?w=189&h=189&c=7&r=0&o=7&pid=1.7&rm=3",
+    category: "beauty",
+    emoji: "💄",
+    desc: "Màu sắc sang trọng, lâu trôi 8 giờ, dưỡng ẩm môi mềm mịn.",
+    price: 1150000,
+    oldPrice: 1450000,
+    rating: 4.8,
+    reviews: 1560,
+    badge: "sale",
+    badgeText: "−21%"
+  },
+  {
+    id: 4,
+    name: "Cà phê Arabica Đà Lạt rang mộc",
+    image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&auto=format&fit=crop",
+    category: "food",
+    emoji: "☕",
+    desc: "Hạt Arabica nguyên chất vùng cao Lâm Đồng, rang vừa, hương thơm dịu.",
+    price: 320000,
+    oldPrice: null,
+    rating: 4.6,
+    reviews: 437,
+    badge: null,
+    badgeText: null
+  },
+  {
+    id: 5,
+    name: "Nồi chiên không dầu Philips 5000",
+    image: "https://images.unsplash.com/photo-1695089028114-ce28248f0ab9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8TiVFMSVCQiU5M2klMjBjaGklQzMlQUFuJTIwa2glQzMlQjRuZyUyMGQlRTElQkElQTd1JTIwUGhpbGlwcyUyMDUwMDB8ZW58MHx8MHx8fDA%3D",
+    category: "home",
+    emoji: "🍳",
+    desc: "Dung tích 5.6L, công nghệ Rapid Air, tự động tắt, ít dầu mỡ.",
+    price: 3490000,
+    oldPrice: 4200000,
+    rating: 4.5,
+    reviews: 678,
+    badge: "sale",
+    badgeText: "−17%"
+  },
+  {
+    id: 6,
+    name: "iPhone 14 Pro 256GB",
+    image: "https://images.unsplash.com/photo-1677144646095-ecd95d06cd71?w=600&auto=format&fit=crop",
+    category: "tech",
+    emoji: "📱",
+    desc: "Chip A18 Pro, camera 48MP Tetra-Prism, titanium, Action Button mới.",
+    price: 28900000,
+    oldPrice: null,
+    rating: 4.9,
+    reviews: 5210,
+    badge: "limited",
+    badgeText: "LIMITED"
+  },
+  {
+    id: 7,
+    name: "Kem chống nắng Anessa Perfect UV",
+    image: "https://th.bing.com/th/id/OIP.rKuCzsjGmLCFIqOYiKsidwHaHa?w=196&h=196&c=7&r=0&o=7&pid=1.7&rm=3",
+    category: "beauty",
+    emoji: "🌤️",
+    desc: "SPF 50+ PA++++, chịu nước, không nhờn rít, bảo vệ suốt ngày.",
+    price: 450000,
+    oldPrice: 520000,
+    rating: 4.8,
+    reviews: 3102,
+    badge: "hot",
+    badgeText: "HOT"
+  },
+  {
+    id: 8,
+    name: "Giày Nike Air Max 270",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop",
+    category: "fashion",
+    emoji: "👟",
+    desc: "Đệm khí Max cổ điển, form giày ôm chân, phù hợp mọi outfit.",
+    price: 2850000,
+    oldPrice: 3500000,
+    rating: 4.6,
+    reviews: 1024,
+    badge: "sale",
+    badgeText: "−19%"
+  }
+];
+
+/* ============================================================
+   STATE — Trạng thái ứng dụng
+   ============================================================ */
+const state = {
+  query: '',
+  sort: 'default',
+  category: 'all'
+};
+
+/* ============================================================
+   SANITIZE INPUT
+   Chặn XSS: loại bỏ ký tự HTML nguy hiểm trước khi đưa vào DOM.
+   Dùng textContent thay innerHTML cho dữ liệu người dùng.
+   ============================================================ */
+function sanitize(str) {
+  // Cắt khoảng trắng đầu cuối
+  const trimmed = str.trim();
+  // Thay thế các ký tự đặc biệt HTML để tránh injection
+  return trimmed
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/* ============================================================
+   NORMALIZE — Chuẩn hóa tiếng Việt để tìm kiếm không dấu
+   vd: "Cà phê" → "ca phe" để match với "ca phe" hoặc "cafe"
+   ============================================================ */
+function normalize(str) {
+  return str
+    .toLowerCase()
+    // Bỏ dấu Unicode (NFD decomposition + remove combining marks)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    // Bỏ ký tự đặc biệt còn lại như đ → d
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'd');
+}
+
+/* ============================================================
+   HIGHLIGHT — Đánh dấu từ khóa trong tên sản phẩm
+   Dùng DOM safe: tạo text node thay vì innerHTML trực tiếp
+   ============================================================ */
+function highlightMatch(text, query) {
+  if (!query) return text;
+  
+  // Escape regex special chars từ query người dùng
+  const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  
+  // Build regex so sánh theo normalized text
+  const normText  = normalize(text);
+  const normQuery = normalize(query);
+  
+  // Tìm vị trí match trong text đã normalize
+  const safeNorm = normQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex    = new RegExp(safeNorm, 'gi');
+  let match;
+  const ranges = [];
+  
+  while ((match = regex.exec(normText)) !== null) {
+    ranges.push({ start: match.index, end: match.index + match[0].length });
+  }
+  
+  if (!ranges.length) return text;
+  
+  // Reconstruct với <mark> tag
+  let result = '';
+  let cursor = 0;
+  for (const { start, end } of ranges) {
+    result += text.slice(cursor, start);
+    result += `<mark>${text.slice(start, end)}</mark>`;
+    cursor = end;
+  }
+  result += text.slice(cursor);
+  return result;
+}
+
+/* ============================================================
+   FILTER & SORT — Lọc và sắp xếp sản phẩm
+   ============================================================ */
+function getFilteredProducts() {
+  const normQuery = normalize(state.query);
+  
+  let results = PRODUCTS.filter(p => {
+    // Filter theo category
+    const catMatch = state.category === 'all' || p.category === state.category;
+    
+    // Filter theo search query
+    // So sánh name đã normalize với query đã normalize → case-insensitive + dấu-insensitive
+    const nameMatch = !normQuery || normalize(p.name).includes(normQuery);
+    const descMatch = !normQuery || normalize(p.desc).includes(normQuery);
+    
+    return catMatch && (nameMatch || descMatch);
+  });
+  
+  // Sort
+  switch (state.sort) {
+    case 'price-asc':
+      results = [...results].sort((a, b) => a.price - b.price);
+      break;
+    case 'price-desc':
+      results = [...results].sort((a, b) => b.price - a.price);
+      break;
+    case 'rating':
+      results = [...results].sort((a, b) => b.rating - a.rating);
+      break;
+    default:
+      break; // giữ thứ tự gốc
+  }
+  
+  return results;
+}
+
+/* ============================================================
+   FORMAT PRICE
+   ============================================================ */
+function formatPrice(n) {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+    maximumFractionDigits: 0
+  }).format(n);
+}
+
+function renderStars(rating) {
+  const full  = Math.floor(rating);
+  const half  = rating % 1 >= 0.5 ? 1 : 0;
+  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(5 - full - half);
+}
+
+/* ============================================================
+   RENDER — Vẽ lại lưới sản phẩm
+   ============================================================ */
+function render() {
+  const grid    = document.getElementById('productGrid');
+  const results = getFilteredProducts();
+  
+  // Update meta count
+  document.getElementById('countDisplay').textContent = results.length;
+  
+  // Cập nhật search meta text
+  const meta = document.getElementById('searchMeta');
+  if (state.query) {
+    meta.innerHTML = results.length > 0
+      ? `Tìm thấy <strong>${results.length}</strong> kết quả cho "<strong style="color:var(--accent)">${sanitize(state.query)}</strong>"`
+      : `Không tìm thấy kết quả`;
+  } else {
+    meta.innerHTML = `Hiển thị <strong id="countDisplay">${results.length}</strong> sản phẩm`;
+  }
+  
+  // Empty state
+  if (results.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-icon">🔍</span>
+        <div class="empty-title">Không tìm thấy sản phẩm</div>
+        <div class="empty-msg">Thử tìm kiếm với từ khóa khác</div>
+        <div class="empty-query">"${sanitize(state.query)}"</div>
+      </div>
+    `;
+    return;
+  }
+  
+  // Render cards
+  grid.innerHTML = results.map(p => {
+    const badgeHTML = p.badge
+      ? `<span class="card-badge badge-${p.badge}">${p.badgeText}</span>`
+      : '';
+    
+    const oldPriceHTML = p.oldPrice
+      ? `<span class="price-old">${formatPrice(p.oldPrice)}</span>`
+      : '';
+    
+    // Safe highlight: chỉ apply cho name, không cho desc (tránh inject từ desc)
+    const highlightedName = highlightMatch(p.name, state.query);
+    
+    return `
+      <div class="product-card" data-id="${p.id}">
+        <div class="card-visual ${p.category}" style="padding:0;">
+          ${badgeHTML}
+          <img src="${p.image || ''}" alt="${p.name}"
+               style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+        <div class="card-body">
+          <div class="card-category">${p.category}</div>
+          <div class="card-name">${highlightedName}</div>
+          <div class="card-rating">
+            <span class="stars">${renderStars(p.rating)}</span>
+            <span class="rating-count">${p.rating} (${p.reviews.toLocaleString('vi-VN')})</span>
+          </div>
+          <div class="card-desc">${p.desc}</div>
+          <div class="card-footer">
+            <div class="price-block">
+              <span class="price-current">${formatPrice(p.price)}</span>
+              ${oldPriceHTML}
+            </div>
+            <button class="add-to-cart" data-id="${p.id}" title="Thêm vào giỏ" aria-label="Thêm ${p.name} vào giỏ hàng">+</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ============================================================
+   TOAST NOTIFICATION
+   ============================================================ */
+let toastTimer = null;
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+/* ============================================================
+   EVENT DELEGATION — Xử lý click trên grid (1 listener duy nhất)
+   ============================================================ */
+document.getElementById('productGrid').addEventListener('click', function(e) {
+  // Nút "Thêm vào giỏ"
+  if (e.target.classList.contains('add-to-cart')) {
+    e.stopPropagation(); // Không bubble lên card
+    const id = parseInt(e.target.dataset.id, 10);
+    const product = PRODUCTS.find(p => p.id === id);
+    if (product) {
+      // Animation pulse
+      e.target.style.transform = 'scale(1.3)';
+      setTimeout(() => e.target.style.transform = '', 200);
+      showToast(`✓ Đã thêm "${product.name}" vào giỏ hàng`);
+    }
+    return;
+  }
+  
+  // Click vào card (xem chi tiết — demo)
+  const card = e.target.closest('.product-card');
+  if (card) {
+    const id = parseInt(card.dataset.id, 10);
+    const product = PRODUCTS.find(p => p.id === id);
+    if (product) showToast(`Đang xem: ${product.name}`);
+  }
+});
+
+/* ============================================================
+   SEARCH INPUT — Debounce để tối ưu hiệu suất
+   Tránh gọi render() sau mỗi ký tự gõ → chỉ gọi sau 200ms im lặng
+   ============================================================ */
+let debounceTimer = null;
+
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const raw = e.target.value; // Giá trị thô từ input
+
+  // Hiện/ẩn nút clear
+  document.getElementById('clearBtn').classList.toggle('visible', raw.length > 0);
+  
+  // Debounce: huỷ timer cũ, đặt timer mới
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    // Lưu query thô vào state (sanitize chỉ khi render ra HTML)
+    // Không sanitize ở đây vì cần so sánh ký tự gốc
+    state.query = raw;
+    render();
+  }, 200); // 200ms delay
+});
+
+// Nút clear
+document.getElementById('clearBtn').addEventListener('click', function() {
+  const input = document.getElementById('searchInput');
+  input.value = '';
+  state.query = '';
+  this.classList.remove('visible');
+  render();
+  input.focus();
+});
+
+/* ============================================================
+   SORT BUTTONS — Event Delegation trên sort-bar
+   ============================================================ */
+document.querySelector('.sort-bar').addEventListener('click', function(e) {
+  const btn = e.target.closest('.sort-btn');
+  if (btn) {
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.sort = btn.dataset.sort;
+    render();
+  }
+  
+  const catBtn = e.target.closest('.cat-btn');
+  if (catBtn) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    catBtn.classList.add('active');
+    state.category = catBtn.dataset.cat;
+    render();
+  }
+});
+
+/* ============================================================
+   KEYBOARD SHORTCUT — Nhấn "/" để focus vào search
+   ============================================================ */
+document.addEventListener('keydown', function(e) {
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+  if (e.key === 'Escape') {
+    document.getElementById('searchInput').blur();
+  }
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+render();
+</script>
+</body>
+</html>
