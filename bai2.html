@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BWhite — Đăng Ký</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=DM+Mono:wght@300;400&family=Be+Vietnam+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:       #000000;
+  --surface:  #0a0a0a;
+  --border:   #1a1a1a;
+  --border-active: #c8a96e;
+  --text:     #f0ece4;
+  --muted:    #6a6560;
+  --gold:     #c8a96e;
+  --gold-dim: #8a6f3e;
+  --error:    #e05c5c;
+  --success:  #5cba8a;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-mono:    'DM Mono', monospace;
+  --font-body:    'Be Vietnam Pro', sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND GRID ── */
+body::before { display: none; }
+
+/* ── GLOW ── */
+body::after { display: none; }
+
+/* ── LAYOUT ── */
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+
+/* ── LEFT PANEL ── */
+.panel-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 60px 56px;
+  border-right: 1px solid var(--border);
+  background: #000000;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.brand span { color: var(--gold); font-style: italic; }
+
+.panel-headline {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.panel-headline h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 4vw, 4.5rem);
+  font-weight: 300;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.panel-headline h2 em {
+  font-style: italic;
+  color: var(--gold);
+  display: block;
+}
+
+.panel-headline p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 320px;
+  font-weight: 300;
+}
+
+.panel-footer {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── RIGHT PANEL (FORM) ── */
+.panel-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 56px;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 420px;
+  animation: slideUp 0.7s var(--ease) both;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-title {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.form-sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+/* ── FIELD GROUP ── */
+.field {
+  margin-bottom: 24px;
+  position: relative;
+  animation: slideUp 0.6s var(--ease) both;
+}
+
+.field:nth-child(1) { animation-delay: 0.1s; }
+.field:nth-child(2) { animation-delay: 0.15s; }
+.field:nth-child(3) { animation-delay: 0.2s; }
+.field:nth-child(4) { animation-delay: 0.25s; }
+
+.field label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.field:focus-within label { color: var(--gold); }
+
+.input-wrap {
+  position: relative;
+}
+
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="password"] {
+  width: 100%;
+  padding: 13px 44px 13px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  -webkit-appearance: none;
+}
+
+.field input:focus {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 0 3px rgba(200,169,110,0.08);
+  background: #181818;
+}
+
+.field input.valid {
+  border-color: var(--success);
+}
+
+.field input.invalid {
+  border-color: var(--error);
+  animation: shake 0.35s var(--ease);
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+/* Input icon */
+.input-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.field input.valid  ~ .input-icon.ok  { opacity: 1; color: var(--success); }
+.field input.invalid ~ .input-icon.err { opacity: 1; color: var(--error); }
+
+/* Toggle password */
+.toggle-pw {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  padding: 4px;
+  transition: color 0.2s;
+  z-index: 1;
+}
+
+.toggle-pw:hover { color: var(--gold); }
+
+/* Error message */
+.err-msg {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--error);
+  letter-spacing: 0.05em;
+  margin-top: 6px;
+  min-height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.err-msg.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── PASSWORD STRENGTH ── */
+.pw-strength {
+  margin-top: 10px;
+  display: none;
+}
+
+.pw-strength.visible { display: block; }
+
+.strength-bars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+.bar {
+  height: 3px;
+  flex: 1;
+  background: var(--border);
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+
+.bar.weak   { background: var(--error); }
+.bar.medium { background: var(--gold-dim); }
+.bar.strong { background: var(--success); }
+
+.strength-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Password rules checklist */
+.pw-rules {
+  margin-top: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pw-rules.visible { display: flex; }
+
+.rule {
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.rule.pass { color: var(--success); }
+.rule::before { content: '○'; font-size: 0.55rem; }
+.rule.pass::before { content: '●'; }
+
+/* ── CHECKBOX ── */
+.checkbox-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 32px;
+  cursor: pointer;
+  animation: slideUp 0.6s var(--ease) 0.3s both;
+}
+
+.checkbox-field input[type="checkbox"] {
+  display: none;
+}
+
+.custom-check {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--surface);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, background 0.2s;
+  font-size: 0.65rem;
+  color: transparent;
+}
+
+.checkbox-field input:checked + .custom-check {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #0d0d0d;
+}
+
+.checkbox-field.invalid-check .custom-check {
+  border-color: var(--error);
+  animation: shake 0.35s var(--ease);
+}
+
+.check-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.check-label a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold-dim);
+}
+
+/* ── SUBMIT BUTTON ── */
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--gold);
+  color: #0d0d0d;
+  border: none;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s, transform 0.15s;
+  animation: slideUp 0.6s var(--ease) 0.35s both;
+  font-weight: 400;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.15);
+  transform: translateX(-100%);
+  transition: transform 0.4s var(--ease);
+}
+
+.submit-btn:hover::before { transform: translateX(0); }
+.submit-btn:hover { background: #d4b87a; }
+.submit-btn:active { transform: scale(0.98); }
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-text { position: relative; z-index: 1; }
+
+/* ── LOGIN LINK ── */
+.login-link {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  animation: slideUp 0.6s var(--ease) 0.4s both;
+}
+
+.login-link a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold-dim);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}
+
+/* ── SUCCESS OVERLAY ── */
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,13,13,0.97);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease);
+  text-align: center;
+  padding: 40px;
+}
+
+.success-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 28px;
+  animation: popIn 0.5s var(--ease) 0.2s both;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.success-title {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+  animation: slideUp 0.5s var(--ease) 0.3s both;
+}
+
+.success-name {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.success-msg {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  animation: slideUp 0.5s var(--ease) 0.4s both;
+}
+
+.success-email {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin-bottom: 36px;
+  animation: slideUp 0.5s var(--ease) 0.45s both;
+}
+
+.success-back {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  padding: 10px 28px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  border-radius: 2px;
+  animation: slideUp 0.5s var(--ease) 0.5s both;
+}
+
+.success-back:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Saved info display */
+.saved-info {
+  margin-top: 20px;
+  padding: 16px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-align: left;
+  max-width: 340px;
+  animation: slideUp 0.5s var(--ease) 0.55s both;
+}
+
+.saved-info .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.saved-info .row:last-child { border-bottom: none; }
+.saved-info .key { color: var(--muted); }
+.saved-info .val { color: var(--text); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .page { grid-template-columns: 1fr; }
+  .panel-left { display: none; }
+  .panel-right { padding: 48px 28px; align-items: flex-start; padding-top: 60px; }
+  .form-card { max-width: 100%; }
+}
+
+@media (max-width: 400px) {
+  .panel-right { padding: 40px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- LEFT PANEL -->
+  <div class="panel-left">
+    <div class="brand">BW<span>hite</span></div>
+
+    <div class="panel-headline">
+      <h2>Chào mừng<br>đến với<br><em>BWhite.</em></h2>
+      <p>Tạo tài khoản để trải nghiệm mua sắm cao cấp, theo dõi đơn hàng và nhận ưu đãi độc quyền dành riêng cho thành viên.</p>
+    </div>
+
+    <div class="panel-footer">© 2025 BWhite Store · Bảo mật SSL</div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel-right">
+    <div class="form-card">
+      <div class="form-title">Đăng ký</div>
+      <div class="form-sub">Tạo tài khoản mới</div>
+
+      <form id="registerForm" novalidate>
+
+        <!-- TÊN -->
+        <div class="field" id="field-name">
+          <label for="name">Họ và tên</label>
+          <div class="input-wrap">
+            <input type="text" id="name" placeholder="Nguyễn Văn A" autocomplete="name">
+            <span class="input-icon ok">✓</span>
+            <span class="input-icon err">✕</span>
+          </div>
+          <div class="err-msg" id="err-name"></div>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="field" id="field-email">
+          <label for="email">Email</label>
+          <div class="input-wrap">
+            <input type="email" id="email" placeholder="ten@email.com" autocomplete="email">
+            <span class="input-icon ok">✓</span>
+            <span class="input-icon err">✕</span>
+          </div>
+          <div class="err-msg" id="err-email"></div>
+        </div>
+
+        <!-- MẬT KHẨU -->
+        <div class="field" id="field-password">
+          <label for="password">Mật khẩu</label>
+          <div class="input-wrap">
+            <input type="password" id="password" placeholder="Tối thiểu 8 ký tự" autocomplete="new-password">
+            <button type="button" class="toggle-pw" id="togglePw">hiện</button>
+          </div>
+          <div class="err-msg" id="err-password"></div>
+
+          <!-- Strength meter -->
+          <div class="pw-strength" id="pwStrength">
+            <div class="strength-bars">
+              <div class="bar" id="bar1"></div>
+              <div class="bar" id="bar2"></div>
+              <div class="bar" id="bar3"></div>
+            </div>
+            <div class="strength-label" id="strengthLabel">—</div>
+          </div>
+
+          <!-- Rules checklist -->
+          <div class="pw-rules" id="pwRules">
+            <div class="rule" id="rule-len">Ít nhất 8 ký tự</div>
+            <div class="rule" id="rule-upper">Có chữ hoa (A–Z)</div>
+            <div class="rule" id="rule-lower">Có chữ thường (a–z)</div>
+            <div class="rule" id="rule-num">Có chữ số (0–9)</div>
+          </div>
+        </div>
+
+        <!-- CHECKBOX -->
+        <label class="checkbox-field" id="checkLabel" for="terms">
+          <input type="checkbox" id="terms">
+          <span class="custom-check">✓</span>
+          <span class="check-label">
+            Tôi đồng ý với <a href="#" onclick="return false">Điều khoản dịch vụ</a>
+            và <a href="#" onclick="return false">Chính sách bảo mật</a> của BWhite
+          </span>
+        </label>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span class="btn-text">Tạo tài khoản</span>
+        </button>
+
+      </form>
+
+      <div class="login-link">
+        Đã có tài khoản? <a href="#">Đăng nhập</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">✓</div>
+  <div class="success-title">Xin chào, <span class="success-name" id="successName"></span></div>
+  <div class="success-msg">Tài khoản đã được tạo thành công</div>
+  <div class="success-email" id="successEmail"></div>
+  <div class="saved-info" id="savedInfo"></div>
+  <br>
+  <button class="success-back" onclick="resetForm()">← Quay lại</button>
+</div>
+
+<script>
+/* ================================================================
+   VALIDATE HELPERS
+   ================================================================ */
+
+// Kiểm tra email hợp lệ bằng regex chuẩn RFC 5322 đơn giản hoá
+function isValidEmail(email) {
+  // Regex kiểm tra: có phần local, @, domain, dấu chấm, extension
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+}
+
+// Kiểm tra tên: ít nhất 2 ký tự, không chứa số hay ký tự đặc biệt
+function isValidName(name) {
+  return name.trim().length >= 2 && /^[\p{L}\s'-]+$/u.test(name.trim());
+}
+
+// Phân tích độ mạnh mật khẩu → trả về object các điều kiện
+function analyzePassword(pw) {
+  return {
+    len:   pw.length >= 8,
+    upper: /[A-Z]/.test(pw),
+    lower: /[a-z]/.test(pw),
+    num:   /[0-9]/.test(pw),
+  };
+}
+
+// Tính điểm độ mạnh (0-4)
+function strengthScore(pw) {
+  const r = analyzePassword(pw);
+  return Object.values(r).filter(Boolean).length;
+}
+
+/* ================================================================
+   UI HELPERS — set trạng thái từng field
+   ================================================================ */
+
+function setFieldState(inputEl, state, msg = '') {
+  // state: 'valid' | 'invalid' | 'idle'
+  inputEl.classList.remove('valid', 'invalid');
+  if (state !== 'idle') inputEl.classList.add(state);
+
+  const fieldId = inputEl.id;
+  const errEl   = document.getElementById('err-' + fieldId);
+  if (errEl) {
+    errEl.textContent = msg;
+    errEl.classList.toggle('show', !!msg);
+  }
+}
+
+function showError(inputEl, msg) { setFieldState(inputEl, 'invalid', msg); }
+function showValid(inputEl)       { setFieldState(inputEl, 'valid', ''); }
+function resetField(inputEl)      { setFieldState(inputEl, 'idle', ''); }
+
+/* ================================================================
+   LIVE VALIDATION — chạy khi user đang gõ (blur / input)
+   ================================================================ */
+
+const nameEl     = document.getElementById('name');
+const emailEl    = document.getElementById('email');
+const passwordEl = document.getElementById('password');
+const termsEl    = document.getElementById('terms');
+
+// Validate tên khi rời field
+nameEl.addEventListener('blur', () => validateName(true));
+nameEl.addEventListener('input', () => { if (nameEl.classList.contains('invalid')) validateName(false); });
+
+function validateName(strict) {
+  const val = nameEl.value.trim();
+  if (!val) {
+    if (strict) showError(nameEl, '⚠ Vui lòng nhập họ tên');
+    else resetField(nameEl);
+    return false;
+  }
+  if (val.length < 2) {
+    showError(nameEl, '⚠ Họ tên phải có ít nhất 2 ký tự');
+    return false;
+  }
+  if (!/^[\p{L}\s'-]+$/u.test(val)) {
+    showError(nameEl, '⚠ Họ tên không được chứa số hay ký tự đặc biệt');
+    return false;
+  }
+  showValid(nameEl);
+  return true;
+}
+
+// Validate email khi rời field
+emailEl.addEventListener('blur', () => validateEmail(true));
+emailEl.addEventListener('input', () => { if (emailEl.classList.contains('invalid')) validateEmail(false); });
+
+function validateEmail(strict) {
+  const val = emailEl.value.trim();
+  if (!val) {
+    if (strict) showError(emailEl, '⚠ Vui lòng nhập email');
+    else resetField(emailEl);
+    return false;
+  }
+  if (!isValidEmail(val)) {
+    showError(emailEl, '⚠ Email không hợp lệ (vd: ten@email.com)');
+    return false;
+  }
+  showValid(emailEl);
+  return true;
+}
+
+// Validate + strength meter khi gõ mật khẩu
+passwordEl.addEventListener('input', () => {
+  updateStrengthMeter();
+  if (passwordEl.classList.contains('invalid')) validatePassword(false);
+});
+
+passwordEl.addEventListener('blur', () => validatePassword(true));
+passwordEl.addEventListener('focus', () => {
+  document.getElementById('pwStrength').classList.add('visible');
+  document.getElementById('pwRules').classList.add('visible');
+});
+
+function updateStrengthMeter() {
+  const pw    = passwordEl.value;
+  const score = strengthScore(pw);
+  const rules = analyzePassword(pw);
+
+  // Cập nhật thanh độ mạnh
+  const bars   = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3')];
+  const label  = document.getElementById('strengthLabel');
+  const levels = [
+    { cls: '',       text: '—' },
+    { cls: 'weak',   text: 'Yếu' },
+    { cls: 'weak',   text: 'Yếu' },
+    { cls: 'medium', text: 'Trung bình' },
+    { cls: 'strong', text: 'Mạnh' },
+  ];
+
+  bars.forEach(b => b.className = 'bar');
+  if (pw.length > 0) {
+    const lvl = levels[score];
+    label.textContent = lvl.text;
+    if (score >= 1) bars[0].classList.add(lvl.cls);
+    if (score >= 3) bars[1].classList.add(lvl.cls);
+    if (score >= 4) bars[2].classList.add(lvl.cls);
+  } else {
+    label.textContent = '—';
+  }
+
+  // Cập nhật checklist
+  document.getElementById('rule-len').classList.toggle('pass',   rules.len);
+  document.getElementById('rule-upper').classList.toggle('pass', rules.upper);
+  document.getElementById('rule-lower').classList.toggle('pass', rules.lower);
+  document.getElementById('rule-num').classList.toggle('pass',   rules.num);
+}
+
+function validatePassword(strict) {
+  const pw    = passwordEl.value;
+  const rules = analyzePassword(pw);
+
+  if (!pw) {
+    if (strict) showError(passwordEl, '⚠ Vui lòng nhập mật khẩu');
+    else resetField(passwordEl);
+    return false;
+  }
+  if (!rules.len)   { showError(passwordEl, '⚠ Mật khẩu phải có ít nhất 8 ký tự'); return false; }
+  if (!rules.upper) { showError(passwordEl, '⚠ Cần có ít nhất 1 chữ hoa (A–Z)'); return false; }
+  if (!rules.lower) { showError(passwordEl, '⚠ Cần có ít nhất 1 chữ thường (a–z)'); return false; }
+  if (!rules.num)   { showError(passwordEl, '⚠ Cần có ít nhất 1 chữ số (0–9)'); return false; }
+
+  showValid(passwordEl);
+  return true;
+}
+
+/* ================================================================
+   TOGGLE HIỆN/ẨN MẬT KHẨU
+   ================================================================ */
+document.getElementById('togglePw').addEventListener('click', function() {
+  const isHidden = passwordEl.type === 'password';
+  passwordEl.type = isHidden ? 'text' : 'password';
+  this.textContent = isHidden ? 'ẩn' : 'hiện';
+});
+
+/* ================================================================
+   XỬ LÝ SUBMIT FORM
+   Logic:
+   1. Chặn hành vi mặc định (page reload)
+   2. Validate tất cả trường theo thứ tự
+   3. Nếu có lỗi → focus vào trường lỗi đầu tiên, dừng
+   4. Nếu hợp lệ → lưu vào LocalStorage → hiện thông báo thành công
+   ================================================================ */
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+  // BƯỚC 1: Chặn reload trang
+  e.preventDefault();
+
+  // BƯỚC 2: Validate từng trường
+  const nameOk  = validateName(true);
+  const emailOk = validateEmail(true);
+  const pwOk    = validatePassword(true);
+
+  // Validate checkbox
+  let termsOk = true;
+  if (!termsEl.checked) {
+    termsOk = false;
+    document.getElementById('checkLabel').classList.add('invalid-check');
+    setTimeout(() => document.getElementById('checkLabel').classList.remove('invalid-check'), 500);
+  }
+
+  // BƯỚC 3: Nếu có lỗi → focus trường đầu tiên bị lỗi
+  if (!nameOk)  { nameEl.focus();     return; }
+  if (!emailOk) { emailEl.focus();    return; }
+  if (!pwOk)    { passwordEl.focus(); return; }
+  if (!termsOk) { return; }
+
+  // BƯỚC 4: Tất cả hợp lệ → lưu vào LocalStorage
+  /*
+   * BẢO MẬT LocalStorage:
+   * - KHÔNG lưu mật khẩu dạng plaintext trong production thật
+   * - Ở đây chỉ lưu để demo; thực tế mật khẩu phải hash phía server
+   * - LocalStorage có thể đọc được bởi JavaScript bất kỳ cùng origin
+   * - Không lưu thông tin nhạy cảm như số thẻ, mật khẩu thật lên LocalStorage
+   */
+  const userData = {
+    name:      nameEl.value.trim(),
+    email:     emailEl.value.trim().toLowerCase(),
+    // Chỉ lưu độ dài mật khẩu để demo, KHÔNG lưu plaintext
+    pwLength:  passwordEl.value.length,
+    createdAt: new Date().toLocaleString('vi-VN'),
+  };
+
+  // Lưu vào LocalStorage với key 'bwhite_user'
+  try {
+    localStorage.setItem('bwhite_user', JSON.stringify(userData));
+  } catch(err) {
+    // LocalStorage có thể bị chặn (private mode, quota full)
+    console.warn('LocalStorage không khả dụng:', err);
+  }
+
+  // BƯỚC 5: Hiện màn hình thành công
+  showSuccess(userData);
+});
+
+/* ================================================================
+   HIỂN THỊ THÀNH CÔNG
+   ================================================================ */
+function showSuccess(data) {
+  document.getElementById('successName').textContent  = data.name;
+  document.getElementById('successEmail').textContent = data.email;
+
+  // Hiện dữ liệu đã lưu
+  document.getElementById('savedInfo').innerHTML = `
+    <div style="font-size:0.6rem;letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;text-transform:uppercase;">
+      Đã lưu vào LocalStorage
+    </div>
+    <div class="row"><span class="key">name</span><span class="val">${escapeHtml(data.name)}</span></div>
+    <div class="row"><span class="key">email</span><span class="val">${escapeHtml(data.email)}</span></div>
+    <div class="row"><span class="key">pw_length</span><span class="val">${data.pwLength} ký tự</span></div>
+    <div class="row"><span class="key">created_at</span><span class="val">${data.createdAt}</span></div>
+  `;
+
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+// Escape HTML để tránh XSS khi render dữ liệu người dùng
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/* ================================================================
+   RESET FORM
+   ================================================================ */
+function resetForm() {
+  document.getElementById('successOverlay').classList.remove('show');
+  document.getElementById('registerForm').reset();
+  [nameEl, emailEl, passwordEl].forEach(resetField);
+  document.getElementById('pwStrength').classList.remove('visible');
+  document.getElementById('pwRules').classList.remove('visible');
+  document.getElementById('togglePw').textContent = 'hiện';
+  passwordEl.type = 'password';
+  document.getElementById('strengthLabel').textContent = '—';
+  document.querySelectorAll('.bar').forEach(b => b.className = 'bar');
+  document.querySelectorAll('.rule').forEach(r => r.classList.remove('pass'));
+  nameEl.focus();
+}
+
+// Terms checkbox animation
+termsEl.addEventListener('change', function() {
+  if (this.checked) {
+    document.getElementById('checkLabel').classList.remove('invalid-check');
+  }
+});
+</script>
+</body>
+</html>
